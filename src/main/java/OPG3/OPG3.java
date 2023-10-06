@@ -1,12 +1,7 @@
-package OPG1;
+package OPG3;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
-import java.util.List;
 
 public class OPG3 {
 
@@ -17,32 +12,22 @@ public class OPG3 {
     static Statement stmt;
     static BufferedReader inLine;
 
-    public static void selectudenparm() {
-        try {
-            // Laver sql-sætning og får den udført
-            String sql = "select * from rytter ";
-            System.out.println("SQL-streng er " + sql);
-            ResultSet res = stmt.executeQuery(sql);
-            // gennemløber svaret
-            while (res.next()) {
-                String s;
-                s = res.getString("init");
-                System.out.println(s + "    " + res.getString(2));
-            }
-            // pæn lukning
-            if (!minConnection.isClosed()) minConnection.close();
-        } catch (Exception e) {
-            System.out.println("fejl:  " + e.getMessage());
-        }
-    }
-
     public static void selectmedparm() {
+        /*
+         du indtaste navnet på en given eksamen og en given termin.
+         Programmet skal som resultat vise en liste af de
+        studerende, der har deltaget i denne afvikling af denne eksamen i denne termin. Udover
+        den studerendes navn og id, skal karakteren også være med i resultatet
+         */
         try {
             // Indlæser søgestreng
-            System.out.println("Indtast søgestreng");
-            String inString = inLine.readLine();
+            System.out.println("Indtast eksamens id");
+            String eksamensid = inLine.readLine();
             // Laver sql-sætning og får den udført
-            String sql = "select navn,stilling from person where navn like '" + inString + "%'";
+            String sql = """
+                    select studerende.navn, studerende.studieID, eksamensForsøg.karakter from eksamensForsøg
+                    join studerende on eksamensForsøg.FK_studieID = studerende.studieID
+                    where eksamensForsøg.FK_eksamenID =""" + eksamensid;
             System.out.println("SQL-streng er " + sql);
             ResultSet res = stmt.executeQuery(sql);
             //gennemløber svaret
@@ -52,98 +37,7 @@ public class OPG3 {
             // pæn lukning
             if (!minConnection.isClosed()) minConnection.close();
         } catch (Exception e) {
-            System.out.println("fejl:  " + e.getMessage());
-        }
-    }
-
-    public static void insertmedstring() {
-        try {
-            // indlæsning
-            System.out.println("Vi vil nu oprette et nyt ansættelsesfforhold");
-            System.out.println("Indtast cpr (personen skal være oprettet på forhånd");
-            String cprstr = inLine.readLine();
-            System.out.println("Indtast firmanr (firma skal være oprettet på forhånd");
-            String firmastr = inLine.readLine();
-
-            // sender insert'en til db-serveren
-            String sql = "insert into ansati values ('" + cprstr + "'," + firmastr + ")";
-            System.out.println("SQL-streng er " + sql);
-            stmt.execute(sql);
-            // pænt svar til brugeren
-            System.out.println("Ansættelsen er nu registreret");
-            if (!minConnection.isClosed()) minConnection.close();
-        } catch (SQLException e) {
-            switch (e.getErrorCode())
-            // fejl-kode 547 svarer til en foreign key fejl
-            {
-                case 547: {
-                    if (e.getMessage().contains("cprforeign"))
-                        System.out.println("cpr-nummer er ikke oprettet");
-                    else if (e.getMessage().contains("firmaforeign"))
-                        System.out.println("firmaet er ikke oprettet");
-                    else
-                        System.out.println("ukendt fremmednøglefejl");
-                    break;
-                }
-                // fejl-kode 2627 svarer til primary key fejl
-                case 2627: {
-                    System.out.println("den pågældende ansættelse er allerede oprettet");
-                    break;
-                }
-                default:
-                    System.out.println("fejlSQL:  " + e.getMessage());
-            }
-            ;
-        } catch (Exception e) {
-            System.out.println("fejl:  " + e.getMessage());
-        }
-    }
-
-    ;
-
-    public static void insertprepared() {
-        try {
-            // indl�sning
-            System.out.println("Vi vil nu oprette et nyt ansættelsesforhold");
-            System.out.println("Indtast cpr (personen skal være oprettet på forhånd");
-            String cprstr = inLine.readLine();
-            System.out.println("Indtast firmanr (firma skal være oprettet på forhånd");
-            String firmastr = inLine.readLine();
-            // Anvendelse af prepared statement
-            String sql = "insert into ansati values (?,?)";
-            PreparedStatement prestmt = minConnection.prepareStatement(sql);
-            prestmt.clearParameters();
-            prestmt.setString(1, cprstr);
-            prestmt.setInt(2, Integer.parseInt(firmastr));
-            // Udf�rer s�tningen
-            prestmt.execute();
-            // p�nt svar til brugeren
-            System.out.println("Ansættelsen er nu registreret");
-            if (!minConnection.isClosed()) minConnection.close();
-        } catch (SQLException e) {
-            switch (e.getErrorCode())
-            // fejl-kode 547 svarer til en foreign key fejl
-            {
-                case 547: {
-                    if (e.getMessage().contains("cprforeign"))
-                        System.out.println("cpr-nummer er ikke oprettet");
-                    else if (e.getMessage().contains("firmaforeign"))
-                        System.out.println("firmaet er ikke oprettet");
-                    else
-                        System.out.println("ukendt fremmednøglefejl");
-                    break;
-                }
-                // fejl-kode 2627 svarer til primary key fejl
-                case 2627: {
-                    System.out.println("den pågældende ansættelse er allerede oprettet");
-                    break;
-                }
-                default:
-                    System.out.println("fejlSQL:  " + e.getMessage());
-            }
-            ;
-        } catch (Exception e) {
-            System.out.println("fejl:  " + e.getMessage());
+            System.out.println(e);
         }
     }
 
@@ -162,37 +56,12 @@ public class OPG3 {
                     ";user=" + login + ";password=" + password + ";");
             //minConnection = DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=eksempeldb;user=sa;password=torben07;");
             stmt = minConnection.createStatement();
-            //Indlæsning og kald af den rigtige metode
-            System.out.println("Indtast  ");
-            System.out.println("s for select uden parameter  ");
-            System.out.println("sp for select med parameter  ");
-            System.out.println("i for insert med strengmanipulation");
-            System.out.println("ps for insert med prepared statement ");
-            System.out.println("OPG_1 for OPG_1");
-            String in = inLine.readLine();
-            switch (in) {
-                case "s": {
-                    selectudenparm();
-                    break;
-                }
-                case "sp": {
-                    selectmedparm();
-                    break;
-                }
-                case "i": {
-                    insertmedstring();
-                    break;
-                }
-                case "ps": {
-                    insertprepared();
-                    break;
-                }
-
-                default:
-                    System.out.println("ukendt indtastning");
-            }
+            selectmedparm();
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+    public static void OPG_1(){
+
     }
 }

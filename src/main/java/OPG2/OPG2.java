@@ -1,7 +1,10 @@
 package OPG1;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
+import java.util.Scanner;
 
 public class OPG2 {
 
@@ -142,6 +145,33 @@ public class OPG2 {
         }
     }
 
+    public static void eksamensAfvikling() {
+        try {
+            System.out.println("Indtast termin for eksamen");
+            String termin = inLine.readLine();
+            System.out.println("Skriv en startDato");
+            String startDato = inLine.readLine();
+            System.out.println("Skriv en slutDato");
+            String slutDato = inLine.readLine();
+            System.out.println("Navn på eksamen afviklingen hører til");
+            String eksamensAfvikling = inLine.readLine();
+
+
+            String sql = "INSERT INTO eksamensForsøg VALUES ('2023-08-21', '2023-08-24', '7', 29,113,1003)";
+            try (PreparedStatement preparedStatement = minConnection.prepareStatement(sql)) {
+                preparedStatement.setString(1, termin);
+                preparedStatement.setString(2, startDato);
+                preparedStatement.setString(3, slutDato);
+                preparedStatement.setString(4, eksamensAfvikling);
+                preparedStatement.executeUpdate();
+
+                System.out.println("Eksamensafvikling er blevet oprettet.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         try {
             inLine = new BufferedReader(new InputStreamReader(System.in));
@@ -149,47 +179,30 @@ public class OPG2 {
             //via native driver
             String server = "80.209.108.69"; //virker måske hos dig
             //virker det ikke - prøv kun med localhost
-            String dbnavn = "";            //virker måske hos dig
+            String dbnavn = "Karakterregistreringssystem";            //virker måske hos dig
             String login = "sa";                     //skal ikke ændres
             String password = "Hejmeddig1234";            //skal ændres
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             minConnection = DriverManager.getConnection("jdbc:sqlserver://" + server + ";databaseName=" + dbnavn +
                     ";user=" + login + ";password=" + password + ";");
-            //minConnection = DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=eksempeldb;user=sa;password=torben07;");
             stmt = minConnection.createStatement();
+
             //Indlæsning og kald af den rigtige metode
-            System.out.println("Indtast  ");
-            System.out.println("s for select uden parameter  ");
-            System.out.println("sp for select med parameter  ");
-            System.out.println("i for insert med strengmanipulation");
-            System.out.println("ps for insert med prepared statement ");
-            String in = inLine.readLine();
-            switch (in) {
-                case "s": {
-                    selectudenparm();
+            System.out.println("Indtast:");
+            System.out.println("1 for at oprette en eksamensafvikling");
+            System.out.println("2 for at udføre en anden handling");
+            int choice = Integer.parseInt(inLine.readLine());
+
+            switch (choice) {
+                case 1:
+                    eksamensAfvikling();
                     break;
-                }
-                case "sp": {
-                    selectmedparm();
-                    break;
-                }
-                case "i": {
-                    insertmedstring();
-                    break;
-                }
-                case "ps": {
-                    insertprepared();
-                    break;
-                }
                 default:
-                    System.out.println("ukendt indtastning");
+                    System.out.println("Ukendt indtastning");
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-    }
-    public static void OPG_1(){
-
     }
 }
 
