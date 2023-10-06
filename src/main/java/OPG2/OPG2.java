@@ -156,18 +156,17 @@ public class OPG2 {
             System.out.println("Skriv et eksamensForsøgID");
             String eksamensForsøgID = inLine.readLine();
             System.out.println("Skriv en studerendes ID");
-            String StuderendeID = inLine.readLine();
+            String studerendeID = inLine.readLine();
             System.out.println("Skriv et eksamensID");
             String eksamensID = inLine.readLine();
 
-
-            String sql = "INSERT INTO eksamensForsøg VALUES ('?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO eksamensForsøg VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = minConnection.prepareStatement(sql)) {
                 preparedStatement.setString(1, startDato);
                 preparedStatement.setString(2, slutDato);
                 preparedStatement.setString(3, karakter);
                 preparedStatement.setString(4, eksamensForsøgID);
-                preparedStatement.setString(5, StuderendeID);
+                preparedStatement.setString(5, studerendeID);
                 preparedStatement.setString(6, eksamensID);
                 preparedStatement.executeUpdate();
 
@@ -177,6 +176,7 @@ public class OPG2 {
             e.printStackTrace();
         }
     }
+
 
     public static void main(String[] args) {
         try {
