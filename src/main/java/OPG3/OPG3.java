@@ -23,11 +23,18 @@ public class OPG3 {
             // Indlæser søgestreng
             System.out.println("Indtast eksamens id");
             String eksamensid = inLine.readLine();
+            int id;
+            try {
+                id = Integer.parseInt(eksamensid);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Eksamens id skal være et tal");
+            }
+            if (id < 1) throw new IllegalArgumentException("Eksamens id skal være større end 1");
             // Laver sql-sætning og får den udført
             String sql = """
                     select studerende.navn, studerende.studieID, eksamensForsøg.karakter from eksamensForsøg
                     join studerende on eksamensForsøg.FK_studieID = studerende.studieID
-                    where eksamensForsøg.FK_eksamenID =""" + eksamensid;
+                    where eksamensForsøg.FK_eksamenID =""" + id;
             System.out.println("SQL-streng er " + sql);
             ResultSet res = stmt.executeQuery(sql);
             //gennemløber svaret
