@@ -39,7 +39,9 @@ public class OPG3 {
             ResultSet res = stmt.executeQuery(sql);
             //gennemløber svaret
             while (res.next()) {
-                System.out.println(res.getString(1) + "    " + res.getString(2));
+                System.out.println("Navn: " + res.getString(1) +
+                        "  StudieID: " + res.getString(2) +
+                        "Karakter: " + res.getString(3));
             }
             // pæn lukning
             if (!minConnection.isClosed()) minConnection.close();
