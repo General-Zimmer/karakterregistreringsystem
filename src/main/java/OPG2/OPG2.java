@@ -147,22 +147,27 @@ public class OPG2 {
 
     public static void eksamensAfvikling() {
         try {
-            System.out.println("Indtast termin for eksamen");
-            String termin = inLine.readLine();
             System.out.println("Skriv en startDato");
             String startDato = inLine.readLine();
             System.out.println("Skriv en slutDato");
             String slutDato = inLine.readLine();
-            System.out.println("Navn på eksamen afviklingen hører til");
-            String eksamensAfvikling = inLine.readLine();
+            System.out.println("Skriv en karakter");
+            String karakter = inLine.readLine();
+            System.out.println("Skriv et eksamensForsøgID");
+            String eksamensForsøgID = inLine.readLine();
+            System.out.println("Skriv en studerendes ID");
+            String studerendeID = inLine.readLine();
+            System.out.println("Skriv et eksamensID");
+            String eksamensID = inLine.readLine();
 
-
-            String sql = "INSERT INTO eksamensForsøg VALUES ('2023-08-21', '2023-08-24', '7', 29,113,1003)";
+            String sql = "INSERT INTO eksamensForsøg VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = minConnection.prepareStatement(sql)) {
-                preparedStatement.setString(1, termin);
-                preparedStatement.setString(2, startDato);
-                preparedStatement.setString(3, slutDato);
-                preparedStatement.setString(4, eksamensAfvikling);
+                preparedStatement.setString(1, startDato);
+                preparedStatement.setString(2, slutDato);
+                preparedStatement.setString(3, karakter);
+                preparedStatement.setString(4, eksamensForsøgID);
+                preparedStatement.setString(5, studerendeID);
+                preparedStatement.setString(6, eksamensID);
                 preparedStatement.executeUpdate();
 
                 System.out.println("Eksamensafvikling er blevet oprettet.");
@@ -171,6 +176,7 @@ public class OPG2 {
             e.printStackTrace();
         }
     }
+
 
     public static void main(String[] args) {
         try {
