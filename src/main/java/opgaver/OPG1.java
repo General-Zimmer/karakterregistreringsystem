@@ -1,4 +1,4 @@
-package OPG1;
+package opgaver;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.*;
@@ -14,40 +14,14 @@ public class OPG1 {
     static Connection minConnection;
     static Statement stmt;
     static BufferedReader inLine;
-    public static void main(String[] args) {
-        try {
-            inLine = new BufferedReader(new InputStreamReader(System.in));
-            //generel opsætning
-            //via native driver
-            String server = "80.209.108.69"; //virker måske hos dig
-            //virker det ikke - prøv kun med localhost
-            String dbnavn = "";            //virker måske hos dig
-            String login = "sa";                     //skal ikke ændres
-            String password = "Hejmeddig1234";            //skal ændres
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            minConnection = DriverManager.getConnection("jdbc:sqlserver://" + server + ";databaseName=" + dbnavn +
-                    ";user=" + login + ";password=" + password + ";");
-            //minConnection = DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=eksempeldb;user=sa;password=torben07;");
-            stmt = minConnection.createStatement();
-            //Indlæsning og kald af den rigtige metode
-            System.out.println("Indtast  ");
-            System.out.println("OPG_1 for OPG 1 ");
-            System.out.println("OPG_2 for OPG 2");
-            System.out.println("OPG_3 for OPG 3");
-            String in = inLine.readLine();
-            switch (in) {
-                case "OPG_1": {
-                    OPG_1();
-                    break;
-                }
-                default:
-                    System.out.println("ukendt indtastning");
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+
+    public OPG1(Connection minConnection, Statement stmt, BufferedReader inLine) {
+        this.minConnection = minConnection;
+        this.stmt = stmt;
+        this.inLine = inLine;
     }
-    public static void OPG_1() {
+
+    public void OPG_1() {
         ArrayList<String> acceptablesGrades = new ArrayList<String>(List.of(new String[]{"-3", "00", "02", "4", "7", "10", "12", "SY", "IM", "IA"}));
         try {
             String sqlString = "insert into eksamensforsøg values(";
@@ -91,4 +65,6 @@ public class OPG1 {
 
         }
     }
+
+
 }
