@@ -157,7 +157,7 @@ public class OPG2 {
             String eksamensAfvikling = inLine.readLine();
 
 
-            String sql = "INSERT INTO eksamensafvikling (termin, start_dato, slut_dato, eksamens_navn) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO eksamensForsøg VALUES ('2023-08-21', '2023-08-24', '7', 29,113,1003)";
             try (PreparedStatement preparedStatement = minConnection.prepareStatement(sql)) {
                 preparedStatement.setString(1, termin);
                 preparedStatement.setString(2, startDato);
