@@ -179,7 +179,7 @@ public class OPG2 {
             //via native driver
             String server = "80.209.108.69"; //virker måske hos dig
             //virker det ikke - prøv kun med localhost
-            String dbnavn = "";            //virker måske hos dig
+            String dbnavn = "Karakterregistreringssystem";            //virker måske hos dig
             String login = "sa";                     //skal ikke ændres
             String password = "Hejmeddig1234";            //skal ændres
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
