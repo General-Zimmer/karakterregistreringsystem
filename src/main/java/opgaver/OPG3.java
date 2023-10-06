@@ -1,4 +1,4 @@
-package OPG3;
+package opgaver;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.*;
@@ -12,7 +12,12 @@ public class OPG3 {
     static Statement stmt;
     static BufferedReader inLine;
 
-    public static void selectmedparm() {
+    public OPG3(Connection minConnection, Statement stmt, BufferedReader inLine){
+        this.minConnection = minConnection;
+        this.stmt = stmt;
+        this.inLine = inLine;
+    }
+    public void OPG_3() {
         /*
          du indtaste navnet på en given eksamen og en given termin.
          Programmet skal som resultat vise en liste af de
@@ -48,29 +53,5 @@ public class OPG3 {
         } catch (Exception e) {
             System.out.println(e);
         }
-    }
-
-    public static void main(String[] args) {
-        try {
-            inLine = new BufferedReader(new InputStreamReader(System.in));
-            //generel opsætning
-            //via native driver
-            String server = "80.209.108.69"; //virker måske hos dig
-            //virker det ikke - prøv kun med localhost
-            String dbnavn = "Karakterregistreringssystem";            //virker måske hos dig
-            String login = "sa";                     //skal ikke ændres
-            String password = "Hejmeddig1234";            //skal ændres
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            minConnection = DriverManager.getConnection("jdbc:sqlserver://" + server + ";databaseName=" + dbnavn +
-                    ";user=" + login + ";password=" + password + ";");
-            //minConnection = DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=eksempeldb;user=sa;password=torben07;");
-            stmt = minConnection.createStatement();
-            selectmedparm();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-    public static void OPG_1(){
-
     }
 }
