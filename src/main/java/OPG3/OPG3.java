@@ -1,7 +1,12 @@
 package OPG1;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
+import java.util.List;
 
 public class OPG3 {
 
@@ -149,7 +154,7 @@ public class OPG3 {
             //via native driver
             String server = "80.209.108.69"; //virker måske hos dig
             //virker det ikke - prøv kun med localhost
-            String dbnavn = "";            //virker måske hos dig
+            String dbnavn = "Karakterregistreringssystem";            //virker måske hos dig
             String login = "sa";                     //skal ikke ændres
             String password = "Hejmeddig1234";            //skal ændres
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
@@ -163,6 +168,7 @@ public class OPG3 {
             System.out.println("sp for select med parameter  ");
             System.out.println("i for insert med strengmanipulation");
             System.out.println("ps for insert med prepared statement ");
+            System.out.println("OPG_1 for OPG_1");
             String in = inLine.readLine();
             switch (in) {
                 case "s": {
@@ -181,14 +187,12 @@ public class OPG3 {
                     insertprepared();
                     break;
                 }
+
                 default:
                     System.out.println("ukendt indtastning");
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-    }
-    public static void OPG_1(){
-
     }
 }

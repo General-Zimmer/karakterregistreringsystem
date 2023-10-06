@@ -2,6 +2,9 @@ package OPG1;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OPG1 {
 
@@ -11,137 +14,6 @@ public class OPG1 {
     static Connection minConnection;
     static Statement stmt;
     static BufferedReader inLine;
-
-    public static void selectudenparm() {
-        try {
-            // Laver sql-sætning og får den udført
-            String sql = "select * from rytter ";
-            System.out.println("SQL-streng er " + sql);
-            ResultSet res = stmt.executeQuery(sql);
-            // gennemløber svaret
-            while (res.next()) {
-                String s;
-                s = res.getString("init");
-                System.out.println(s + "    " + res.getString(2));
-            }
-            // pæn lukning
-            if (!minConnection.isClosed()) minConnection.close();
-        } catch (Exception e) {
-            System.out.println("fejl:  " + e.getMessage());
-        }
-    }
-
-    public static void selectmedparm() {
-        try {
-            // Indlæser søgestreng
-            System.out.println("Indtast søgestreng");
-            String inString = inLine.readLine();
-            // Laver sql-sætning og får den udført
-            String sql = "select navn,stilling from person where navn like '" + inString + "%'";
-            System.out.println("SQL-streng er " + sql);
-            ResultSet res = stmt.executeQuery(sql);
-            //gennemløber svaret
-            while (res.next()) {
-                System.out.println(res.getString(1) + "    " + res.getString(2));
-            }
-            // pæn lukning
-            if (!minConnection.isClosed()) minConnection.close();
-        } catch (Exception e) {
-            System.out.println("fejl:  " + e.getMessage());
-        }
-    }
-
-    public static void insertmedstring() {
-        try {
-            // indlæsning
-            System.out.println("Vi vil nu oprette et nyt ansættelsesfforhold");
-            System.out.println("Indtast cpr (personen skal være oprettet på forhånd");
-            String cprstr = inLine.readLine();
-            System.out.println("Indtast firmanr (firma skal være oprettet på forhånd");
-            String firmastr = inLine.readLine();
-
-            // sender insert'en til db-serveren
-            String sql = "insert into ansati values ('" + cprstr + "'," + firmastr + ")";
-            System.out.println("SQL-streng er " + sql);
-            stmt.execute(sql);
-            // pænt svar til brugeren
-            System.out.println("Ansættelsen er nu registreret");
-            if (!minConnection.isClosed()) minConnection.close();
-        } catch (SQLException e) {
-            switch (e.getErrorCode())
-            // fejl-kode 547 svarer til en foreign key fejl
-            {
-                case 547: {
-                    if (e.getMessage().contains("cprforeign"))
-                        System.out.println("cpr-nummer er ikke oprettet");
-                    else if (e.getMessage().contains("firmaforeign"))
-                        System.out.println("firmaet er ikke oprettet");
-                    else
-                        System.out.println("ukendt fremmednøglefejl");
-                    break;
-                }
-                // fejl-kode 2627 svarer til primary key fejl
-                case 2627: {
-                    System.out.println("den pågældende ansættelse er allerede oprettet");
-                    break;
-                }
-                default:
-                    System.out.println("fejlSQL:  " + e.getMessage());
-            }
-            ;
-        } catch (Exception e) {
-            System.out.println("fejl:  " + e.getMessage());
-        }
-    }
-
-    ;
-
-    public static void insertprepared() {
-        try {
-            // indl�sning
-            System.out.println("Vi vil nu oprette et nyt ansættelsesforhold");
-            System.out.println("Indtast cpr (personen skal være oprettet på forhånd");
-            String cprstr = inLine.readLine();
-            System.out.println("Indtast firmanr (firma skal være oprettet på forhånd");
-            String firmastr = inLine.readLine();
-            // Anvendelse af prepared statement
-            String sql = "insert into ansati values (?,?)";
-            PreparedStatement prestmt = minConnection.prepareStatement(sql);
-            prestmt.clearParameters();
-            prestmt.setString(1, cprstr);
-            prestmt.setInt(2, Integer.parseInt(firmastr));
-            // Udf�rer s�tningen
-            prestmt.execute();
-            // p�nt svar til brugeren
-            System.out.println("Ansættelsen er nu registreret");
-            if (!minConnection.isClosed()) minConnection.close();
-        } catch (SQLException e) {
-            switch (e.getErrorCode())
-            // fejl-kode 547 svarer til en foreign key fejl
-            {
-                case 547: {
-                    if (e.getMessage().contains("cprforeign"))
-                        System.out.println("cpr-nummer er ikke oprettet");
-                    else if (e.getMessage().contains("firmaforeign"))
-                        System.out.println("firmaet er ikke oprettet");
-                    else
-                        System.out.println("ukendt fremmednøglefejl");
-                    break;
-                }
-                // fejl-kode 2627 svarer til primary key fejl
-                case 2627: {
-                    System.out.println("den pågældende ansættelse er allerede oprettet");
-                    break;
-                }
-                default:
-                    System.out.println("fejlSQL:  " + e.getMessage());
-            }
-            ;
-        } catch (Exception e) {
-            System.out.println("fejl:  " + e.getMessage());
-        }
-    }
-
     public static void main(String[] args) {
         try {
             inLine = new BufferedReader(new InputStreamReader(System.in));
@@ -159,26 +31,13 @@ public class OPG1 {
             stmt = minConnection.createStatement();
             //Indlæsning og kald af den rigtige metode
             System.out.println("Indtast  ");
-            System.out.println("s for select uden parameter  ");
-            System.out.println("sp for select med parameter  ");
-            System.out.println("i for insert med strengmanipulation");
-            System.out.println("ps for insert med prepared statement ");
+            System.out.println("OPG_1 for OPG 1 ");
+            System.out.println("OPG_2 for OPG 2");
+            System.out.println("OPG_3 for OPG 3");
             String in = inLine.readLine();
             switch (in) {
-                case "s": {
-                    selectudenparm();
-                    break;
-                }
-                case "sp": {
-                    selectmedparm();
-                    break;
-                }
-                case "i": {
-                    insertmedstring();
-                    break;
-                }
-                case "ps": {
-                    insertprepared();
+                case "OPG_1": {
+                    OPG_1();
                     break;
                 }
                 default:
@@ -188,7 +47,48 @@ public class OPG1 {
             System.out.println(e);
         }
     }
-    public static void OPG_1(){
+    public static void OPG_1() {
+        ArrayList<String> acceptablesGrades = new ArrayList<String>(List.of(new String[]{"-3", "00", "02", "4", "7", "10", "12", "SY", "IM", "IA"}));
+        try {
+            String sqlString = "insert into eksamensforsøg values(";
+            System.out.println("Indsæt eksamensforsøg ind i databasen");
+            System.out.println("Indtast start dato dato for eksamforsøget [YYYY-MM-DD]");
+            String startDato = inLine.readLine();
+            try {
+                LocalDate.parse(startDato);
+            } catch (IllegalArgumentException e){
+                System.err.println("Start Dato invalid");
+                return;
+            }
+            System.out.println("Indtast slut dato for eksamforsøget [YYYY-MM-DD]");
+            String slutDato = inLine.readLine();
+            try {
+                LocalDate.parse(slutDato);
+            } catch (IllegalArgumentException e){
+                System.err.println("Slut Dato invalid");
+                return;
+            }
+            System.out.println("Indtast elevens studieID");
+            String studieID = inLine.readLine();
+            System.out.println("Indtast eksamenID");
+            String eksamenID = inLine.readLine();
+            System.out.println("Indtast karakter eller grund for udeblivelse");
+            String karakter = inLine.readLine();
+            if (!acceptablesGrades.contains(karakter)){
+                throw new IllegalArgumentException("Karakter er ikke en gyldig");
+            }
+            System.out.println("Indtast 27 eller over for eksamensforsøgID");
+            String efID = inLine.readLine();
+            sqlString += "'" + startDato + "', '" + slutDato + "', '" + karakter + "', " +
+                    efID + ", " + studieID + ", " + eksamenID + ")";
+            System.out.println("Dint SQL streng er: " + sqlString);
+            stmt.execute(sqlString);
+            System.out.println("Eksamensforsøg er inserted");
+        } catch (SQLException e) {
+            System.err.println(e.getStackTrace());
+            System.err.println("Tjek om StudieID, EksamensID og eksamensforsøgID er Gyldige");
+        } catch (Exception e) {
 
+        }
     }
 }
