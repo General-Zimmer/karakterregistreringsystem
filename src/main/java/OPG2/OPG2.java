@@ -3,7 +3,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.*;
 
-public class OPG1 {
+public class OPG2 {
 
     /**
      * @param args
@@ -192,3 +192,4 @@ public class OPG1 {
 
     }
 }
+
